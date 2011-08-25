@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
+
+		<title>To Do List</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.tmpl.min.js"></script>
+		<script type="text/javascript" src="js/knockout-1.2.1.js"></script>
+		<style type="text/css">
+			.scored {text-decoration:line-through;}
+			.normal {text-decoration:none;}
+		</style>
+	</head>
+	<body>
+		<div class="main">
+			<div class="content">
+				<h1>ToDo List</h1>
+				<input id="newToDo" data-bind="event: {blur: addToDo}" placeholder="What needs to be done?" class="input" />
+				<div data-bind="text: remaining"></div>
+				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
+				<script type="text/x-jquery-tmpl" id="toDoTemplate">
+					<li class="${style}">
+						<input type="checkbox" data-bind="click: markDone" ${doCheck(isDone())} /> ${text}
+					</li>
+				</script>
+				<button data-bind="click: removeChecked">Clear todos done</button>
+			</div>
+		</div>
+		<script type="text/javascript">
+		//define toDo
+		var toDo = function(txt) {
+			this.text = ko.observable(txt);
+			this.isDone = ko.observable(false);
+			this.style = ko.observable("normal");
+
+			this.markDone = function() {
+				var cur = this.isDone();
+				if (cur) {
+					this.isDone(false);
+					this.style("normal");
+				}
+				else {
+					this.isDone(true);
+					this.style("scored");
+				}
+			}
+		} 
+		//define viewModel
+		var toDoListModel = {
+			toDos : ko.observableArray([
+				new toDo("Get Milk"),
+				new toDo("Get Newspaper")
+			]),
+		
+			addToDo: function() {
+				this.toDos.push(new toDo($("#newToDo").val()));
+				$("#newToDo").val('');
+			},
+
+			removeChecked: function() {
+				this.toDos.remove(function(item) { return item.isDone()});
+	
+			}
+		};
+		//dependent observable
+		toDoListModel.remaining = ko.dependentObservable(function(){
+			var arr = this.toDos();
+			var rem = 0;
+			for (var i = 0; i < arr.length; i++) {
+				if (!arr[i].isDone()) {
+					rem++
+				}
+			}
+			return rem + (rem === 1? " item": " items") + " remaining";
+		}, toDoListModel);
+
+		//apply bindings
+		ko.applyBindings(toDoListModel);
+
+		//utility function
+		function doCheck(isDone) {
+			return isDone ? "checked" : "";
+		}
+		</script>
+	</body>
+</html>	
