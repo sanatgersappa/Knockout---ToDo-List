@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" >
-
 		<title>To Do List</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
@@ -21,7 +19,7 @@
 				<div data-bind="text: remaining"></div>
 				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
 				<script type="text/x-jquery-tmpl" id="toDoTemplate">
-					<li class="${style}">
+					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
 						<input type="checkbox" data-bind="click: markDone" ${doCheck(isDone())} /> ${text}
 					</li>
 				</script>
@@ -29,21 +27,18 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-		//define toDo
+		//define toDo 
 		var toDo = function(txt) {
 			this.text = ko.observable(txt);
 			this.isDone = ko.observable(false);
-			this.style = ko.observable("normal");
 
 			this.markDone = function() {
 				var cur = this.isDone();
 				if (cur) {
 					this.isDone(false);
-					this.style("normal");
 				}
 				else {
 					this.isDone(true);
-					this.style("scored");
 				}
 			}
 		} 
