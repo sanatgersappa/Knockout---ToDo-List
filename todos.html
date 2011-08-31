@@ -11,11 +11,11 @@
 			.normal {text-decoration:none;}
 		</style>
 	</head>
-	<body>
+	<body data-bind="event: {keyup: addToDo}">
 		<div class="main">
 			<div class="content">
 				<h1>ToDo List</h1>
-				<input id="newToDo" data-bind="event: {blur: addToDo}" placeholder="What needs to be done?" class="input" />
+				<input id="newToDo" placeholder="What needs to be done?" class="input" />
 				<div data-bind="text: remaining"></div>
 				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
 				<script type="text/x-jquery-tmpl" id="toDoTemplate">
@@ -50,8 +50,11 @@
 			]),
 		
 			addToDo: function() {
-				this.toDos.push(new toDo($("#newToDo").val()));
-				$("#newToDo").val('');
+				var key = window.event.keyCode || window.event.which;
+				if (key === 13) {
+					this.toDos.push(new toDo($("#newToDo").val()));
+					$("#newToDo").val('');
+				}
 			},
 
 			removeChecked: function() {
