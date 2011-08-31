@@ -51,8 +51,9 @@
 		
 			addToDo: function() {
 				var key = window.event.keyCode || window.event.which;
-				if (key === 13) {
-					this.toDos.push(new toDo($("#newToDo").val()));
+				var todo = $("#newToDo").val();
+				if (key === 13 && todo != "") {
+					this.toDos.push(new toDo(todo));
 					$("#newToDo").val('');
 				}
 			},
