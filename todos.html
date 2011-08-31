@@ -20,7 +20,7 @@
 				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
 				<script type="text/x-jquery-tmpl" id="toDoTemplate">
 					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
-						<input type="checkbox" data-bind="click: markDone" ${doCheck(isDone())} /> ${text}
+						<input type="checkbox" data-bind="click: markDone, checked:isDone()" /> ${text}
 					</li>
 				</script>
 				<button data-bind="click: removeChecked">Clear todos done</button>
@@ -73,11 +73,6 @@
 
 		//apply bindings
 		ko.applyBindings(toDoListModel);
-
-		//utility function
-		function doCheck(isDone) {
-			return isDone ? "checked" : "";
-		}
 		</script>
 	</body>
 </html>	
