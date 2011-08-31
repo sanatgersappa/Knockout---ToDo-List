@@ -17,6 +17,9 @@
 				<h1>ToDo List</h1>
 				<input id="newToDo" placeholder="What needs to be done?" class="input" />
 				<div data-bind="text: remaining"></div>
+				<hr />
+				<input id="allDone" type="checkbox" data-bind="event: {change: allDone}" />Mark all as Done
+				<hr />
 				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
 				<script type="text/x-jquery-tmpl" id="toDoTemplate">
 					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
@@ -61,6 +64,13 @@
 			removeChecked: function() {
 				this.toDos.remove(function(item) { return item.isDone()});
 	
+			},
+
+			allDone: function() {
+				var status = $("#allDone").is(':checked');
+				for (var i = 0; i < this.toDos().length; i++) {
+					this.toDos()[i].isDone(status);
+				}
 			}
 		};
 		//dependent observable
