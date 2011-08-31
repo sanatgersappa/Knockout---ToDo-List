@@ -18,7 +18,7 @@
 				<input id="newToDo" placeholder="What needs to be done?" class="input" />
 				<div data-bind="text: remaining"></div>
 				<hr />
-				<input id="allDone" type="checkbox" data-bind="event: {change: allDone}" />Mark all as Done
+				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
 				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
 				<script type="text/x-jquery-tmpl" id="toDoTemplate">
@@ -37,12 +37,7 @@
 
 			this.markDone = function() {
 				var cur = this.isDone();
-				if (cur) {
-					this.isDone(false);
-				}
-				else {
-					this.isDone(true);
-				}
+				this.isDone(!cur);
 			}
 		} 
 		//define viewModel
@@ -74,7 +69,7 @@
 			}
 		};
 		//dependent observable
-		toDoListModel.remaining = ko.dependentObservable(function(){
+		toDoListModel.remainingTodos = ko.dependentObservable(function(){
 			var arr = this.toDos();
 			var rem = 0;
 			for (var i = 0; i < arr.length; i++) {
@@ -82,6 +77,11 @@
 					rem++
 				}
 			}
+			return rem;			
+		}, toDoListModel);
+
+		toDoListModel.remaining = ko.dependentObservable(function(){
+			var rem = this.remainingTodos();
 			return rem + (rem === 1? " item": " items") + " remaining";
 		}, toDoListModel);
 
