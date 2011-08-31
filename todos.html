@@ -16,7 +16,7 @@
 			<div class="content">
 				<h1>ToDo List</h1>
 				<input id="newToDo" placeholder="What needs to be done?" class="input" />
-				<div data-bind="text: remaining"></div>
+				<div data-bind="text: formatRemaining(remainingTodos())"></div>
 				<hr />
 				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
@@ -36,8 +36,9 @@
 			this.isDone = ko.observable(false);
 
 			this.markDone = function() {
-				var cur = this.isDone();
-				this.isDone(!cur);
+				//var cur = this.isDone();
+				//this.isDone(!cur);
+				this.isDone(!this.isDone());
 			}
 		} 
 		//define viewModel
@@ -80,13 +81,13 @@
 			return rem;			
 		}, toDoListModel);
 
-		toDoListModel.remaining = ko.dependentObservable(function(){
-			var rem = this.remainingTodos();
-			return rem + (rem === 1? " item": " items") + " remaining";
-		}, toDoListModel);
-
 		//apply bindings
 		ko.applyBindings(toDoListModel);
+
+		//utility function
+		function formatRemaining(rem) {
+			return rem + (rem === 1? " item": " items") + " remaining";
+		}
 		</script>
 	</body>
-</html>	
+</html>
