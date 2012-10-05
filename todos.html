@@ -3,9 +3,8 @@
 	<head>
 		<title>To Do List</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
-		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-		<script type="text/javascript" src="js/jquery.tmpl.min.js"></script>
-		<script type="text/javascript" src="js/knockout-1.2.1.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+		<script type="text/javascript" src="js/knockout-2.1.0.js"></script>
 		<style type="text/css">
 			.scored {text-decoration:line-through;}
 			.normal {text-decoration:none;}
@@ -20,12 +19,11 @@
 				<hr />
 				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
-				<ul data-bind="template: {name: 'toDoTemplate', foreach: toDos}"></ul>
-				<script type="text/x-jquery-tmpl" id="toDoTemplate">
+				<ul data-bind="foreach: toDos">
 					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
-						<input type="checkbox" data-bind="click: markDone, checked:isDone()" /> ${text}
+						<input type="checkbox" data-bind="click: markDone, checked:isDone()" /><span data-bind="text: text"></span>
 					</li>
-				</script>
+                </ul>
 				<button data-bind="click: removeChecked">Clear todos done</button>
 			</div>
 		</div>
@@ -36,9 +34,7 @@
 			this.isDone = ko.observable(false);
 
 			this.markDone = function() {
-				//var cur = this.isDone();
-				//this.isDone(!cur);
-				this.isDone(!this.isDone());
+        		this.isDone(!this.isDone());
 			}
 		} 
 		//define viewModel
@@ -48,10 +44,10 @@
 				new toDo("Get Newspaper")
 			]),
 		
-			addToDo: function() {
-				var key = window.event.keyCode || window.event.which;
-				var todo = $.trim($("#newToDo").val());
-				if (key === 13 && todo != "") {
+			addToDo: function(data, event) {
+				var key = event.keyCode || window.event.keyCode || window.event.which;
+                var todo = $.trim($("#newToDo").val());
+                if (key === 13 && todo != "") {
 					this.toDos.push(new toDo(todo));
 					$("#newToDo").val('');
 				}
@@ -69,8 +65,9 @@
 				}
 			}
 		};
-		//dependent observable
-		toDoListModel.remainingTodos = ko.dependentObservable(function(){
+		
+        //dependent observable
+		toDoListModel.remainingTodos = ko.dependentObservable(function() {
 			var arr = this.toDos();
 			var rem = 0;
 			for (var i = 0; i < arr.length; i++) {
