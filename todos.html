@@ -3,25 +3,27 @@
 	<head>
 		<title>To Do List</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
-        <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-		<script type="text/javascript" src="js/knockout-2.1.0.js"></script>
+        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js"></script>
+		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
 		<style type="text/css">
 			.scored {text-decoration:line-through;}
 			.normal {text-decoration:none;}
 		</style>
 	</head>
-	<body data-bind="event: {keyup: addToDo}">
+	<body>
 		<div class="main">
 			<div class="content">
 				<h1>ToDo List</h1>
-				<input id="newToDo" placeholder="What needs to be done?" class="input" />
+                <form data-bind="submit: addToDo">
+				    <input id="newToDo" placeholder="What needs to be done?" class="input" />
+                </form>
 				<div data-bind="text: formatRemaining(remainingTodos())"></div>
 				<hr />
 				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
 				<ul data-bind="foreach: toDos">
 					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
-						<input type="checkbox" data-bind="click: markDone, checked:isDone()" /><span data-bind="text: text"></span>
+						<input type="checkbox" data-bind="event: {change: markDone}, checked:isDone()" /><span data-bind="text: text"></span>
 					</li>
                 </ul>
 				<button data-bind="click: removeChecked">Clear todos done</button>
@@ -45,9 +47,8 @@
 			]),
 		
 			addToDo: function(data, event) {
-				var key = event.keyCode || window.event.keyCode || window.event.which;
                 var todo = $.trim($("#newToDo").val());
-                if (key === 13 && todo != "") {
+                if (todo != "") {
 					this.toDos.push(new toDo(todo));
 					$("#newToDo").val('');
 				}
