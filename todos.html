@@ -17,7 +17,7 @@
                 <form data-bind="submit: addToDo">
 				    <input id="newToDo" placeholder="What needs to be done?" class="input" />
                 </form>
-				<div data-bind="text: formatRemaining(remainingTodos())"></div>
+				<div data-bind="text: remainingTodos() + ' remaining'"></div>
 				<hr />
 				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
@@ -81,11 +81,6 @@
 
 		//apply bindings
 		ko.applyBindings(toDoListModel);
-
-		//utility function
-		function formatRemaining(rem) {
-			return rem + (rem === 1? " item": " items") + " remaining";
-		}
 		</script>
 	</body>
 </html>
