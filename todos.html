@@ -22,7 +22,7 @@
 				<input id="allDone" type="checkbox" data-bind="checked:!remainingTodos(), event: {change: allDone}" />Mark all as Done
 				<hr />
 				<ul data-bind="foreach: toDos">
-					<li data-bind="css: { normal: !isDone(), scored: isDone()}">
+					<li data-bind="css: {normal: !isDone(), scored: isDone()}">
 						<input type="checkbox" data-bind="event: {change: markDone}, checked:isDone()" /><span data-bind="text: text"></span>
 					</li>
                 </ul>
