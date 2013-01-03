@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>To Do List</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
-        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js"></script>
-		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.1.0.js"></script>
+		<title>To Do List</title>
 	</head>
 	<body>
 		<div class="main">
@@ -25,6 +23,8 @@
 				<button data-bind="click: removeChecked">Clear todos done</button>
 			</div>
 		</div>
+        <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.js"></script>
+		<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.0.js"></script>
 		<script type="text/javascript">
 		//define toDo 
 		var toDo = function(txt) {
@@ -63,16 +63,12 @@
 			}
 		};
 		
-        //dependent observable
-		toDoListModel.remainingTodos = ko.dependentObservable(function() {
-			var arr = this.toDos();
-			var rem = 0;
-			for (var i = 0; i < arr.length; i++) {
-				if (!arr[i].isDone()) {
-					rem++
-				}
-			}
-			return rem;			
+        //computed property
+		toDoListModel.remainingTodos = ko.computed(function() {
+			var arr = ko.utils.arrayFilter(this.toDos(), function(item) {
+				return !item.isDone();
+			});
+			return arr.length;			
 		}, toDoListModel);
 
 		//apply bindings
